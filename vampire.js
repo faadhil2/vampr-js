@@ -10,22 +10,39 @@ class Vampire {
 
   // Adds the vampire as an offspring of this vampire
   addOffspring(vampire) {
-
+    this.offspring.push(vampire);
+    vampire.creator = this;
   }
 
   // Returns the total number of vampires created by that vampire
   get numberOfOffspring() {
-
+    return this.offspring.length
   }
 
   // Returns the number of vampires away from the original vampire this vampire is
   get numberOfVampiresFromOriginal() {
+    let vampCreator = this;;
+    let numOfVamps = 0;
 
+    while(vampCreator.creator){
+      vampCreator = vampCreator.creator;
+      numOfVamps ++
+    }
+    return numOfVamps;
   }
 
   // Returns true if this vampire is more senior than the other vampire. (Who is closer to the original vampire)
   isMoreSeniorThan(vampire) {
+    const thisVampAge = this.numberOfVampiresFromOriginal;
+    const otherVampAge = vampire.numberOfVampiresFromOriginal;
 
+    if (this.creator === null){
+      return true
+    }
+    if (thisVampAge < otherVampAge){
+      return true
+    }
+    return false;
   }
 
   /** Stretch **/
@@ -36,6 +53,29 @@ class Vampire {
   // * when comparing Ansel and Sarah, Ansel is the closest common anscestor.
   // * when comparing Ansel and Andrew, Ansel is the closest common anscestor.
   closestCommonAncestor(vampire) {
+    let closestCommonAncestor;
+
+    if (this === vampire){
+      closestCommonAncestor = this;
+    }
+    else if (this.creator === null){
+      closestCommonAncestor = this;
+    }else if(vampire.creator === null){
+      closestCommonAncestor = vampire;
+    } else if(this.creator === vampire.creator){
+      closestCommonAncestor = this.creator;
+    } else if (this.numberOfVampiresFromOriginal === 1 && vampire.numberOfVampiresFromOriginal === 1){
+      closestCommonAncestor = this.creator;
+    }
+
+    else if (this.offspring.includes(vampire)){
+      closestCommonAncestor = this;
+    } else if (vampire.offspring.includes(this)){
+      closestCommonAncestor = vampire;
+    }
+
+
+    return closestCommonAncestor;
 
   }
 }
